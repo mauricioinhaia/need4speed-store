@@ -19,9 +19,9 @@ public class Produto implements Serializable {
     private String descricao;
     @Column(nullable = false)
     private BigDecimal valor;
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean servico;
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private Boolean inativo;
 
     public UUID getId() {
