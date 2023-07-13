@@ -19,7 +19,9 @@ public class ProdutoService {
         this.produtoRepository = produtoRepository;
     }
 
+
     @Transactional
+
     public Object inserirProduto (Produto produto){
 
         if (produto.getInativo() == null ) {
@@ -27,6 +29,7 @@ public class ProdutoService {
         }
         return produtoRepository.save(produto);
     }
+
 
     public List<Produto> listarProdutos () {
         return produtoRepository.findAll();
