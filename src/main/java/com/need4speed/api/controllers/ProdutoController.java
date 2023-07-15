@@ -29,7 +29,7 @@ public class ProdutoController {
     @PostMapping("/")
     public ResponseEntity<Object> inserirProduto(@RequestBody @Valid ProdutoDto produtoDto) {
         String response = produtoValidator.validarProduto(produtoDto);
-
+        //ver para melhorar com try catch conforme os demais
         if (response != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -57,7 +57,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> excluirProduto (@PathVariable(value = "id") UUID id){
+    public ResponseEntity<Object> excluirProduto (@PathVariable(value = "id") UUID id ){
         try {
            produtoService.excluirProduto(id);
             return ResponseEntity.status(HttpStatus.OK).body("Produto Excluido com Sucesso");
@@ -65,6 +65,19 @@ public class ProdutoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao excluir o produto!");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> atualizarProduto (@PathVariable(value = "id") UUID id,
+                                                    @RequestBody @Valid ProdutoDto produtoDto){
+        try {
+            produtoService.atualizarProduto(id, produtoDto);
+            return ResponseEntity.status(HttpStatus.OK).body("Produto Atualizado com Sucesso");
+        } catch (ProdutoException erro) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao Atualizar o produto!");
         }
     }
 }

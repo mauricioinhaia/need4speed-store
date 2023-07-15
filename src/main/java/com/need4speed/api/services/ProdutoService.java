@@ -1,9 +1,11 @@
 package com.need4speed.api.services;
 
+import com.need4speed.api.dtos.ProdutoDto;
 import com.need4speed.api.exceptions.ProdutoException;
 import com.need4speed.api.models.Produto;
 import com.need4speed.api.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +23,6 @@ public class ProdutoService {
 
 
     @Transactional
-
     public Object inserirProduto (Produto produto){
 
         if (produto.getInativo() == null ) {
@@ -45,12 +46,19 @@ public class ProdutoService {
 
     @Transactional
     public void excluirProduto (UUID id) {
-        Optional<Produto> produtoOptional = produtoRepository.findById(id);
-        if (!produtoOptional.isPresent()){
-            throw new ProdutoException("Produto Nao Encontrado!");
-        }
+        this.buscarProduto(id);
         //Adicionar Verificacao Associacao a Pedidos
-        produtoRepository.delete(produtoOptional.get());
+        produtoRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Object atualizarProduto (UUID id, ProdutoDto produtoDto) {
+        Produto produto = (Produto) buscarProduto(id);
+        BeanUtils.copyProperties(produtoDto,produto);
+        if (produto.getInativo() == null ) {
+            produto.setInativo(false);
+        }
+        return produtoRepository.save(produto);
     }
 
 }
